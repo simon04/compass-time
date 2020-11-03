@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>compass-time</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        background: #242424;
+        color: #dedede;
+        text-align: center;
+        font-weight: bold;
+        font-family: "Noto Sans";
+        font-size: 10vh;
+      }
+    </style>
+  </head>
+  <body>
+    <time id="time">…</time>
+    <script>
+      const COMPASS = [
+        "N",
+        "NNO",
+        "NO",
+        "ONO",
+        "O",
+        "OSO",
+        "SO",
+        "SSO",
+        "S",
+        "SSW",
+        "SW",
+        "WSW",
+        "W",
+        "WNW",
+        "NW",
+        "NNW",
+      ];
+      computeCompassTime();
+      setInterval(() => computeCompassTime(), 500);
+
+      function computeCompassTime() {
+        const secondsOf12h = 12 * 3600;
+        const date = new Date();
+        const secondsOfDay =
+          (date.getHours() % 12) * 3600 +
+          date.getMinutes() * 60 +
+          date.getSeconds();
+
+        fractionOf256 = Math.floor(
+          (secondsOfDay / secondsOf12h) * COMPASS.length ** 2
+        );
+        const hh = Math.floor(fractionOf256 / COMPASS.length);
+        const mm = Math.floor(fractionOf256 % COMPASS.length);
+        const time = `${COMPASS[hh]}:${COMPASS[mm]}`;
+
+        document.getElementById("time").innerHTML = [
+          date.toLocaleTimeString("de", {
+            hour12: true,
+            hour: "numeric",
+            minute: "numeric",
+          }) + " / 11:59",
+          "=",
+          fractionOf256 + " / " + COMPASS.length ** 2,
+          "=",
+          time,
+        ].join("<br>");
+      }
+    </script>
+  </body>
+</html>
